@@ -6,9 +6,12 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import com.api.model.RelacionVideojuegoPlataformaGenero;
 import com.api.model.Videojuego;
 import com.api.repository.VideojuegoRepository;
 import com.example.videojuegos.VideojuegosbackendApplication;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.model.entity.VideojuegoEntity;
 
 //Anotación que indica a spring boot que es un controlador
@@ -95,40 +99,21 @@ public class VideojuegoController {
 		// Se crea el string de salida
 		String jsonSalida = "";
 		// se llama al objeto para generar el json
-		ObjectMapper mapperObj = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode mapperObj = mapper.createObjectNode();
+		ArrayNode arrayNode = mapper.createArrayNode();
 		List<String> relaciones = vidrep.selectWithOtherTables();
 		LOG.info("Loading element....");
 		for (String relacion : relaciones) {
 			String[] campos = relacion.split(",");
-			RelacionVideojuegoPlataformaGenero rvpj = new RelacionVideojuegoPlataformaGenero(campos[0], campos[1],
-					campos[2]);
-			
-			try {
-				if (jsonSalida.equals("")) {
-					jsonSalida = "[";
-					jsonSalida += mapperObj.writeValueAsString(rvpj);
-				} else {
-					jsonSalida += "," + mapperObj.writeValueAsString(rvpj);
-				}
+			mapperObj.put("nombre_videojuego",campos[0]);
+			mapperObj.put("nombre_plataforma",campos[1]);
+			mapperObj.put("nombre_genero",campos[2]);
 
-			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				LOG.error("Json Failed....");
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				LOG.error("Json Mapping Failed....");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				LOG.error("IO Failed....");
-			}
-			
+			arrayNode.add(mapperObj);		
 		}
 		LOG.info("Elements Loads....");
-		jsonSalida += "]";
 
-		return ResponseEntity.ok().body(jsonSalida);
+		return ResponseEntity.ok().body(arrayNode.toString());
 	}
 }
