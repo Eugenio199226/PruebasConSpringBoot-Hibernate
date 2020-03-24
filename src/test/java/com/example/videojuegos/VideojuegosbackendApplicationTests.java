@@ -56,17 +56,32 @@ class VideojuegosbackendApplicationTests {
 				      .isEqualTo(false);
 	}
 	@Test
-	public void testDGeneroDeleteByName() 
+	public void testDGenerosUpdate() 
+	{
+		// when
+		try {
+		genrep.updatebyName("prueba2","prueba");
+				 
+				    // then
+				    assertThat(genrep.count())
+				      .isEqualTo(2);
+		}catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void testEGeneroDeleteByName() 
 	{
 		try {
-		genrep.deletebyName("prueba");
+		genrep.deletebyName("prueba2");
 		}catch(Exception e) 
 		{
 			e.printStackTrace();
 		}
 	    // then
 	    assertThat(genrep.count())
-	      .isEqualTo(1);
+	      .isEqualTo(2);
 	}
 
 }

@@ -83,6 +83,15 @@ public class GeneroController {
 		LOG.info("Updated Genero....");
 		return ResponseEntity.ok().body(actualizarGenero);
 	}
+	//Modificar por Nombre
+	@PutMapping("/generos/actualizar/{name}")
+	public ResponseEntity<GeneroEntity> updateGenero(@PathVariable(value="name") String name,@Valid @RequestBody String valor)
+	{
+		LOG.info("Updating Genero....");
+		genrep.updatebyName(name, valor);
+		LOG.info("Updated Genero....");
+		return ResponseEntity.ok().build();
+	}
 	//Borrar
 	/*@DeleteMapping("/genero/borrar/{id}")
 		public ResponseEntity<GeneroEntity> borrarGenero(@PathVariable(value="id")Long genid)

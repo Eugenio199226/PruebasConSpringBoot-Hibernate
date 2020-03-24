@@ -16,6 +16,10 @@ public interface GeneroRepository  extends JpaRepository<GeneroEntity, Long> {
 	 @Modifying
 	 @Query(value="DELETE FROM genero g where g.nombre_genero=?1",nativeQuery=true)
 	public void deletebyName(String nombre);
+	 @Transactional
+	 @Modifying
+	 @Query(value="UPDATE genero set nombre_genero=?1 where nombre_genero=?2",nativeQuery=true)
+	public void updatebyName(String valor,String nombre);
 	 @Query(value = "select * from genero g where g.nombre_genero LIKE ?1%", nativeQuery = true)
 	 public List<GeneroEntity> findByName(String name);
 
