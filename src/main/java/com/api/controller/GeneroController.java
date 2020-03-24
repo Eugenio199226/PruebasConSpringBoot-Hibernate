@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +53,7 @@ public class GeneroController {
 		return ResponseEntity.ok().body(generos);
 	}
 	//Lista Generos por id
-	@GetMapping("/genero/{id}")
+	/*@GetMapping("/genero/{id}")
 	public ResponseEntity<Optional<GeneroEntity>> getGenerobyId(@PathVariable(value="id") Long genId)
 	{
 		LOG.info("Loading Genero....");
@@ -60,6 +61,15 @@ public class GeneroController {
 		LOG.info("Loaded Genero....");
 		return ResponseEntity.ok().body(gen);
 		
+	}*/
+	//Lista Generos por nombre
+	@GetMapping("/genero/buscador/{nombre}")
+	public ResponseEntity<List<GeneroEntity>> getAllValuesByName(@PathVariable(value="name") String name)
+	{
+		LOG.info("Loading Generos....");
+		List<GeneroEntity> generos = genrep.findByName(name);
+		LOG.info("Loaded Generos....");
+		return ResponseEntity.ok().body(generos);
 	}
 	//Modificar
 	@PutMapping("/generos/actualizar/{id}")
@@ -74,13 +84,22 @@ public class GeneroController {
 		return ResponseEntity.ok().body(actualizarGenero);
 	}
 	//Borrar
-	@DeleteMapping("/genero/borrar/{id}")
+	/*@DeleteMapping("/genero/borrar/{id}")
 		public ResponseEntity<GeneroEntity> borrarGenero(@PathVariable(value="id")Long genid)
 	{
 		LOG.info("Deleting Genero....");
-		Optional<GeneroEntity> gen=genrep.findById(genid);
 		genrep.deleteById(genid);
 		LOG.info("Deleted Genero....");
+		return ResponseEntity.ok().build();
+	}*/
+	//Borrar por nombre
+	@DeleteMapping("/genero/borrar/{name}")
+	public ResponseEntity<GeneroEntity> borrarPorNombre(@PathVariable(value="name")String name)
+	{
+		LOG.info("Deleting Genero....");
+		genrep.deletebyName(name);
+		LOG.info("Deleted Genero....");
+		
 		return ResponseEntity.ok().build();
 	}
 

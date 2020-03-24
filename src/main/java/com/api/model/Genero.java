@@ -9,7 +9,6 @@ public class Genero {
 		}
 		public Genero(long idGenero, String nombre) {
 			super();
-			this.idGenero = idGenero;
 			this.nombre = nombre;
 		}
 		
