@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.model.Plataforma;
 import com.api.repository.PlataformaRepository;
 import com.example.videojuegos.VideojuegosbackendApplication;
+import com.model.entity.GeneroEntity;
 import com.model.entity.PlataformaEntity;
 
 //Anotación que indica a spring boot que es un controlador
@@ -52,16 +53,24 @@ public class PlataformaController {
 			return ResponseEntity.ok().body(plat);
 		}
 	//Lista Plataformas
-	@GetMapping("/plataformas")
+/*	@GetMapping("/plataformas")
 	public ResponseEntity<List<PlataformaEntity>> getAllPlataformas()
 	{
 		LOG.info("Loading Plataformas....");
 		List<PlataformaEntity> plataformas = (List<PlataformaEntity>) platrep.findAll();
 		LOG.info("Loaded Plataformas....");
 		return ResponseEntity.ok().body(plataformas);
+	}*/
+	@GetMapping("/plataforma/buscador/{name}")
+	public ResponseEntity<List<PlataformaEntity>> getAllValuesByName(@PathVariable(value="name") String name)
+	{
+		LOG.info("Loading Plataformas....");
+		List<PlataformaEntity> plataformas = platrep.searcher(name);
+		LOG.info("Loaded Plataformas....");
+		return ResponseEntity.ok().body(plataformas);
 	}
 	//Modificar
-	@PutMapping("/plataforma/actualizar/{id}")
+	/*@PutMapping("/plataforma/actualizar/{id}")
 	public ResponseEntity<PlataformaEntity> updateEntity(@PathVariable(value="id")Long platId,@Valid @RequestBody Plataforma platDetails)
 	{
 		LOG.info("Updating Plataforma....");
@@ -73,9 +82,28 @@ public class PlataformaController {
 		PlataformaEntity actualizarPlataforma=platrep.save(plataformaActualizada);
 		LOG.info("Updated Plataforma....");
 		return ResponseEntity.ok().body(actualizarPlataforma);
+	}*/
+	@PutMapping("/plataforma/actualizar/{name}")
+	public ResponseEntity<PlataformaEntity> updateEntity(@PathVariable(value="name")String name,@Valid @RequestBody Plataforma platDetails)
+	{
+		LOG.info("Updating Plataforma....");
+		Optional<PlataformaEntity> plat =platrep.findByName(name);
+		if(platDetails.getNombre()!=null){
+		plat.get().setNombre(platDetails.getNombre());
+		}
+		if(platDetails.getFecha_lanzamiento()!=null) {
+		plat.get().setFecha_lanzamiento(platDetails.getFecha_lanzamiento());
+		}
+		if(platDetails.getFecha_descatalogada()!=null){
+		plat.get().setFecha_descatalogada(platDetails.getFecha_descatalogada());
+		}
+		PlataformaEntity plataformaActualizada = plat.get();
+		PlataformaEntity actualizarPlataforma=platrep.save(plataformaActualizada);
+		LOG.info("Updated Plataforma....");
+		return ResponseEntity.ok().body(actualizarPlataforma);
 	}
 	//Borrar
-	@DeleteMapping("/plataforma/borrar/{id}")
+	/*@DeleteMapping("/plataforma/borrar/{id}")
 	public ResponseEntity<PlataformaEntity> borrarPlataforma(@PathVariable(value="id")Long platid)
 	{
 		LOG.info("Deleting Plataforma....");
@@ -83,7 +111,14 @@ public class PlataformaController {
 		platrep.deleteById(platid);
 		LOG.info("Deleted Plataforma....");
 		return ResponseEntity.ok().build();
-	}
-		
+	}*/
+	@DeleteMapping("/plataforma/borrar/{name}")
+	public ResponseEntity<PlataformaEntity> borrarPlataforma(@PathVariable(value="name")String name)
+	{
+		LOG.info("Deleting Plataforma....");
+		platrep.deleteByName(name);
+		LOG.info("Deleted Plataforma....");
+		return ResponseEntity.ok().build();
+	}	
 
 }
