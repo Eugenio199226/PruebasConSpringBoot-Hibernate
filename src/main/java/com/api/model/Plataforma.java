@@ -16,7 +16,6 @@ public class Plataforma {
 	}
 	public Plataforma() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public long getId_plataforma() {
 		return id_plataforma;

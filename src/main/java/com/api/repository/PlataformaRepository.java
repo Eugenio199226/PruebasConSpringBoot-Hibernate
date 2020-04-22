@@ -17,10 +17,13 @@ import com.model.entity.PlataformaEntity;
 @Repository
 public interface PlataformaRepository  extends JpaRepository<PlataformaEntity, Long> {
 	public PlataformaEntity save(Optional<PlataformaEntity> gen);
+	//Select modificado
 	@Query(value = "select * from plataforma g where g.nombre_plataforma LIKE ?1%", nativeQuery = true)
 	public List<PlataformaEntity> searcher(String name);
+	//Select modificado 2
 	@Query(value = "select * from plataforma g where g.nombre_plataforma = ?1", nativeQuery = true)
 	public Optional<PlataformaEntity> findByName(String name);
+	//Deleted modificado
 	@Transactional
 	 @Modifying
 	 @Query(value="DELETE FROM plataforma g where g.nombre_plataforma=?1",nativeQuery=true)

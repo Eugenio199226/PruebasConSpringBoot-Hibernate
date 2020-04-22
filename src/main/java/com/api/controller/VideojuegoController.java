@@ -69,13 +69,20 @@ public class VideojuegoController {
 		return ResponseEntity.ok().body(vid);
 
 	}
-
+	//Lista Videojuegos por nombre
+	@GetMapping("/videojuego/{name}")
+	public ResponseEntity<List<VideojuegoEntity>> search(@PathVariable(value = "name") String name) 
+	{
+		List<VideojuegoEntity> listVid=vidrep.searcher(name);
+		
+		return ResponseEntity.ok().body(listVid);
+	}
 	// Modificar
-	@PutMapping("/videojuegos/actualizar/{id}")
-	public ResponseEntity<VideojuegoEntity> updateVideojuego(@PathVariable(value = "id") Long vidId,
+	@PutMapping("/videojuegos/actualizar/{name}")
+	public ResponseEntity<VideojuegoEntity> updateVideojuego(@PathVariable(value = "name") String name,
 			@Valid @RequestBody Videojuego vidDetails) {
 		LOG.info("Updating Videojuego....");
-		Optional<VideojuegoEntity> vid = vidrep.findById(vidId);
+		Optional<VideojuegoEntity> vid = vidrep.findByName(name);
 		vid.get().setNombre(vidDetails.getNombre());
 		VideojuegoEntity videojuegoActualizado = vid.get();
 		VideojuegoEntity actualizarVideojuego = vidrep.save(videojuegoActualizado);
@@ -83,6 +90,14 @@ public class VideojuegoController {
 		return ResponseEntity.ok().body(actualizarVideojuego);
 	}
 
+	//Borrar por nombre
+	@DeleteMapping("/videojuego/borrar/{name}")
+	public ResponseEntity<VideojuegoEntity> borrarVideojuegoPorNobmre(@PathVariable(value = "name") String nombre) {
+
+		vidrep.deleteByName(nombre);
+		LOG.info("Deleting Videojuego....");
+		return ResponseEntity.ok().build();
+	}
 	// Borrar
 	@DeleteMapping("/videojuego/borrar/{id}")
 	public ResponseEntity<VideojuegoEntity> borrarVideojuego(@PathVariable(value = "id") Long vidId) {

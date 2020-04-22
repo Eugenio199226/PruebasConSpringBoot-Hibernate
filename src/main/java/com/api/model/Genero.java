@@ -5,7 +5,6 @@ public class Genero {
 
 		public Genero() {
 		super();
-		// TODO Auto-generated constructor stub
 		}
 		public Genero(long idGenero, String nombre) {
 			super();
